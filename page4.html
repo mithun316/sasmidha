@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Timer ⏳</title>
+
+  <!-- ✅ DATE GATE: Only 09-02-2026 00:00 to 10-02-2026 00:00 (IST) -->
+  <script>
+    const START_AT = new Date("2026-02-09T00:00:00+05:30").getTime();
+    const END_AT   = new Date("2026-02-10T00:00:00+05:30").getTime();
+
+    function enforceGate(){
+      const now = Date.now();
+
+      if(now < START_AT){
+        window.location.replace("index.html");
+        return;
+      }
+
+      // ✅ After unlock time -> auto redirect to page5
+      if(now >= END_AT){
+        window.location.replace("page5.html");
+        return;
+      }
+    }
+
+    enforceGate();
+    setInterval(enforceGate, 1000);
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Poppins",sans-serif;}
+    body{
+      min-height:100svh;display:flex;align-items:center;justify-content:center;
+      background: radial-gradient(circle at top, #ffb3d9, #7b2cff);
+      overflow:hidden;color:#fff;padding:16px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card{
+      width:min(760px, 96vw);
+      border-radius:26px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:0 26px 90px rgba(0,0,0,.35);
+      padding:18px 16px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+    .card:before{
+      content:"";position:absolute;inset:-2px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.22), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 80% 90%, rgba(255,255,255,.16), rgba(255,255,255,0) 60%);
+      pointer-events:none;
+    }
+    .inner{position:relative;z-index:2;}
+    .emoji{font-size:56px;line-height:1;margin-top:6px;}
+    h1{font-size:clamp(18px,5vw,28px);font-weight:1000;margin-top:10px;}
+    p{margin-top:10px;font-size:clamp(13px,3.4vw,16px);line-height:1.6;opacity:.96;}
+
+    .timerBox{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+    .t{
+      min-width:130px;padding:12px 14px;border-radius:18px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.18);
+      font-weight:1000;
+    }
+
+    .small{font-size:12px;opacity:.85;margin-top:10px;}
+    .btnRow{margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    button{
+      border:0;cursor:pointer;padding:12px 16px;border-radius:999px;
+      font-weight:1000;background: rgba(255,255,255,.92);color:#4b007a;min-width:190px;
+      touch-action: manipulation;
+    }
+    button.alt{background: rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22);}
+
+    /* disabled look */
+    button.locked{
+      opacity:.55;
+      cursor:not-allowed;
+      filter:saturate(.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="inner">
+      <div class="emoji">⏳🍫</div>
+      <h1>Time mudinja next set open aagum…</h1>
+      <p><b>10-02-2026 00:00</b> வந்தா automatic-ah <b>Page 5</b> போயிடும் ✅</p>
+
+      <div class="timerBox">
+        <div class="t" id="d">Days: 0</div>
+        <div class="t" id="h">Hours: 0</div>
+        <div class="t" id="m">Min: 0</div>
+        <div class="t" id="s">Sec: 0</div>
+      </div>
+
+      <div class="small">*Device time correct-ah irukkanum (IST).* </div>
+
+      <div class="btnRow">
+        <button class="alt" id="backBtn" type="button">Back to Page 3</button>
+        <button id="nextBtn" type="button">Go to Page 5</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dEl = document.getElementById("d");
+    const hEl = document.getElementById("h");
+    const mEl = document.getElementById("m");
+    const sEl = document.getElementById("s");
+
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    backBtn.addEventListener("click", () => location.href = "page3.html");
+
+    // ✅ Block click until unlock time
+    nextBtn.addEventListener("click", () => {
+      const now = Date.now();
+      if (now < END_AT) {
+        alert("⏳ Innum time iruku… 10-02-2026 00:00 apram than Page 5 open agum ❤️");
+        return;
+      }
+      location.href = "page5.html";
+    });
+
+    function tick(){
+      const now = Date.now();
+      const diff = END_AT - now;
+
+      // ✅ If time over -> auto redirect
+      if(diff <= 0){
+        window.location.replace("page5.html");
+        return;
+      }
+
+      // ✅ Update countdown
+      const sec = Math.floor(diff / 1000);
+      const days = Math.floor(sec / 86400);
+      const hours = Math.floor((sec % 86400) / 3600);
+      const mins = Math.floor((sec % 3600) / 60);
+      const secs = sec % 60;
+
+      dEl.textContent = "Days: " + days;
+      hEl.textContent = "Hours: " + hours;
+      mEl.textContent = "Min: " + mins;
+      sEl.textContent = "Sec: " + secs;
+
+      // ✅ Keep button locked until unlock time
+      nextBtn.classList.add("locked");
+      nextBtn.disabled = true;
+      nextBtn.textContent = "Locked (opens at 00:00)";
+    }
+
+    // unlock button exactly when time comes (before redirect happens)
+    function unlockButtonIfReady(){
+      const now = Date.now();
+      if(now >= END_AT){
+        nextBtn.classList.remove("locked");
+        nextBtn.disabled = false;
+        nextBtn.textContent = "Go to Page 5 ✅";
+      }
+    }
+
+    tick();
+    unlockButtonIfReady();
+    setInterval(() => { tick(); unlockButtonIfReady(); }, 1000);
+  </script>
+</body>
+</html>
