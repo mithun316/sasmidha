@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Page 6 ⏳🧸</title>
+
+  <!-- ✅ WINDOW: 10-02-2026 00:00 to 11-02-2026 00:00 (IST) -->
+  <script>
+    const START_AT = new Date("2026-02-10T00:00:00+05:30");
+    const END_AT   = new Date("2026-02-11T00:00:00+05:30");
+    const nowGate  = new Date();
+
+    if(!(nowGate >= START_AT && nowGate < END_AT)){
+      if(nowGate < START_AT) window.location.replace("page5.html");
+      else window.location.replace("page7.html");
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Poppins",sans-serif;}
+    body{
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: radial-gradient(circle at top, #ffd1ea, #6e22ff);
+      overflow:hidden;
+      color:#fff;
+      padding:14px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* 🧸 Rain */
+    .rain{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+    .drop{
+      position:absolute;top:-12vh;
+      animation:fall linear infinite;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,.25));
+      opacity:.92;
+      user-select:none;
+    }
+    @keyframes fall{
+      0%{transform:translateY(-12vh) rotate(0deg);opacity:0;}
+      10%{opacity:1;}
+      100%{transform:translateY(112vh) rotate(360deg);opacity:.92;}
+    }
+
+    .wrap{width:100%;max-width:860px;position:relative;z-index:2;display:grid;gap:12px;place-items:center;}
+
+    .topTag{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(10px);
+      box-shadow:0 14px 45px rgba(0,0,0,.22);
+      font-weight:900;text-align:center;
+      max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+
+    .card{
+      width:100%;
+      border-radius:26px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:0 26px 90px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      padding:18px 16px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute;inset:-2px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.20), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 80% 90%, rgba(255,255,255,.14), rgba(255,255,255,0) 60%);
+      pointer-events:none;
+    }
+    .inner{position:relative;z-index:2;}
+
+    h1{
+      font-weight:1000;
+      font-size:clamp(18px,4.8vw,34px);
+      line-height:1.2;
+      margin-bottom:8px;
+    }
+    .sub{
+      opacity:.9;
+      font-size:clamp(12px,3.4vw,15px);
+      margin-bottom:12px;
+    }
+
+    .icons{
+      display:flex;justify-content:center;gap:18px;
+      font-size:56px;margin:6px 0 12px;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,.18));
+    }
+
+    /* ✅ Kavidhai box */
+    .poemBox{
+      width:100%;
+      border-radius:22px;
+      background: rgba(0,0,0,.16);
+      border:1px solid rgba(255,255,255,.16);
+      padding:16px 14px;
+      line-height:1.9;
+      font-size:clamp(13px,3.4vw,16px);
+      color: rgba(255,255,255,.95);
+      text-shadow:0 2px 10px rgba(0,0,0,.18);
+      margin-bottom:14px;
+    }
+    .gap{height:10px;}
+
+    /* ✅ Timer boxes */
+    .timerRow{
+      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .tBox{
+      min-width:120px;
+      padding:12px 14px;
+      border-radius:18px;
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.18);
+      font-weight:1000;
+    }
+    .small{font-size:12px;opacity:.85;margin-top:4px;}
+
+    .btnRow{margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .btn{
+      border:0;
+      cursor:pointer;
+      padding:13px 18px;
+      border-radius:999px;
+      font-weight:1000;
+      min-width:190px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      touch-action:manipulation;
+    }
+    .btn.primary{
+      background: rgba(255,255,255,.92);
+      color:#5b00b0;
+      box-shadow:0 18px 60px rgba(0,0,0,.16);
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.14);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:none;
+    }
+    .btn:active{transform:scale(.99);}
+
+    /* ✅ Mini popup (wait) */
+    .toast{
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      background:rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:900;
+      display:none;
+      z-index:9999;
+      backdrop-filter: blur(8px);
+      box-shadow:0 16px 50px rgba(0,0,0,.25);
+      max-width:92vw;
+      text-align:center;
+    }
+    .toast.show{display:block;animation:pop .18s ease-out;}
+    @keyframes pop{from{transform:translateX(-50%) scale(.95);opacity:.6;}to{transform:translateX(-50%) scale(1);opacity:1;}}
+
+    @media (max-width:420px){
+      body{padding:12px;}
+      .icons{font-size:50px;}
+      .btn{min-width:150px;padding:12px 14px;}
+      .card{padding:16px 14px;}
+      .tBox{min-width:110px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="rain" id="rain"></div>
+
+  <div class="wrap">
+    <div class="topTag">⏳ Page 6 – Timer + Teddy Rain 🧸</div>
+
+    <div class="card">
+      <div class="inner">
+        <h1>🧸 Thangoo… innum konjam wait 😘</h1>
+        <div class="sub">Time mudinja automatic-ah Page 7 open aagum ✅</div>
+
+        <div class="icons">
+          <span>🧸</span><span>💗</span><span>✨</span>
+        </div>
+
+        <div class="poemBox">
+          <b>Tanglish Kavidhai 💜</b>
+          <div class="gap"></div>
+          Un kitta irundha podhum…<br>
+          en heart calm aagudhu… 💗
+          <div class="gap"></div>
+          Teddy madhiri soft-ah irukkura nee,<br>
+          en life-ku sweetest reason da… 🧸✨
+          <div class="gap"></div>
+          Ippo konjam wait pannu…<br>
+          next page-la surprise ready 😌💝
+        </div>
+
+        <div class="timerRow">
+          <div class="tBox" id="dd">Days: 0</div>
+          <div class="tBox" id="hh">Hours: 0</div>
+          <div class="tBox" id="mm">Min: 0</div>
+          <div class="tBox" id="ss">Sec: 0</div>
+        </div>
+        <div class="small">*Device time correct-ah irukkanum (IST).*</div>
+
+        <div class="btnRow">
+          <button class="btn ghost" type="button" onclick="location.href='page5.html'">⬅ Back Page 5</button>
+          <button class="btn primary" id="nextBtn" type="button">NEXT ➜ Page 7</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">⏳ Wait… time mudinja than Page 7 open aagum 😄</div>
+
+  <script>
+    /* 🧸 Teddy rain */
+    const rain = document.getElementById("rain");
+    const emojis = ["🧸","💗","✨","🌸","⭐"];
+    for(let i=0;i<28;i++){
+      const e=document.createElement("span");
+      e.className="drop";
+      e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.left=Math.random()*100+"vw";
+      e.style.animationDuration=(6+Math.random()*8)+"s";
+      e.style.animationDelay=(Math.random()*6)+"s";
+      e.style.fontSize=(18+Math.random()*18)+"px";
+      rain.appendChild(e);
+    }
+
+    /* Timer to END_AT */
+    const dd=document.getElementById("dd");
+    const hh=document.getElementById("hh");
+    const mm=document.getElementById("mm");
+    const ss=document.getElementById("ss");
+
+    function tick(){
+      const now = new Date();
+      const diff = END_AT - now;
+
+      if(diff <= 0){
+        window.location.replace("page7.html"); // ✅ auto jump
+        return;
+      }
+
+      const sec = Math.floor(diff/1000);
+      const days = Math.floor(sec/86400);
+      const hours = Math.floor((sec%86400)/3600);
+      const mins = Math.floor((sec%3600)/60);
+      const secs = sec%60;
+
+      dd.textContent = "Days: " + days;
+      hh.textContent = "Hours: " + hours;
+      mm.textContent = "Min: " + mins;
+      ss.textContent = "Sec: " + secs;
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    /* Next button behavior */
+    const toast=document.getElementById("toast");
+    function showToast(){
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"), 1600);
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", ()=>{
+      const now = new Date();
+      if(now < END_AT){
+        showToast();
+      }else{
+        window.location.href="page7.html";
+      }
+    });
+  </script>
+</body>
+</html>

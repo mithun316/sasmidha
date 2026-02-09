@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teddy Day 🧸</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Poppins;
+}
+
+/* LOCK SCREEN */
+.lockScreen{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:#6e22ff;
+color:white;
+text-align:center;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background: radial-gradient(circle at top,#ffd1ea,#6e22ff);
+overflow:hidden;
+color:white;
+}
+
+/* TEDDY RAIN */
+
+.rain{
+position:fixed;
+inset:0;
+pointer-events:none;
+}
+
+.drop{
+position:absolute;
+top:-10vh;
+font-size:28px;
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+0%{transform:translateY(-10vh);}
+100%{transform:translateY(110vh) rotate(360deg);}
+}
+
+/* CARD */
+
+.card{
+width:95%;
+max-width:750px;
+border-radius:25px;
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.22);
+backdrop-filter:blur(10px);
+padding:25px;
+text-align:center;
+box-shadow:0 25px 80px rgba(0,0,0,.35);
+}
+
+h1{
+font-size:32px;
+font-weight:900;
+margin-bottom:10px;
+}
+
+.teddy{
+font-size:90px;
+margin:10px 0;
+}
+
+.poem{
+margin-top:15px;
+line-height:1.8;
+font-size:15px;
+background:rgba(0,0,0,.18);
+padding:15px;
+border-radius:20px;
+}
+
+button{
+margin-top:18px;
+border:none;
+padding:14px 22px;
+border-radius:999px;
+font-weight:900;
+cursor:pointer;
+background:white;
+color:#6a00a3;
+font-size:16px;
+}
+
+button:active{
+transform:scale(.95);
+}
+
+/* POPUP */
+
+.popup{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,.6);
+}
+
+.popup.show{
+display:flex;
+}
+
+.popupCard{
+width:90%;
+max-width:450px;
+background:white;
+color:#6a00a3;
+padding:25px;
+border-radius:20px;
+text-align:center;
+font-weight:900;
+}
+
+</style>
+</head>
+
+<body>
+
+<script>
+
+// ✅ SET TIMER DATE
+const unlockDate = new Date("Feb 10, 2026 00:00:00").getTime();
+const now = new Date().getTime();
+
+if(now < unlockDate){
+
+document.body.innerHTML = `
+<div class="lockScreen">
+
+<h1>🧸 Teddy Day Surprise Locked</h1>
+<p>Night 12 ku mela dhaan open aagum 😘</p>
+
+<h2 id="timer"></h2>
+
+</div>
+`;
+
+setInterval(()=>{
+
+const now = new Date().getTime();
+const distance = unlockDate - now;
+
+let hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+let minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+let seconds = Math.floor((distance%(1000*60))/1000);
+
+document.getElementById("timer").innerHTML =
+hours+"h "+minutes+"m "+seconds+"s ";
+
+if(distance < 0){
+location.reload();
+}
+
+},1000);
+
+throw "LOCKED";
+
+}
+
+</script>
+
+
+<div class="rain" id="rain"></div>
+
+<div class="card">
+
+<h1>🧸 Happy Teddy Day Thangoo 😘</h1>
+
+<div class="teddy">🧸💗</div>
+
+<div class="poem">
+
+Un kaiyila teddy irundhaa,<br>
+adhu en kaiya pidicha madhiri…<br><br>
+
+Un smile paatha odane,<br>
+en heart full happy aagudhu… 💖<br><br>
+
+Nee dhaan en soft teddy…<br>
+naan dhaan un hug 🧸✨
+
+</div>
+
+<button onclick="checkName()">🤗 Teddy Hug</button>
+
+<br>
+
+<button onclick="nextPage()">NEXT ➜ Page 6</button>
+
+</div>
+
+
+<div class="popup" id="popup">
+<div class="popupCard" id="popupMsg"></div>
+</div>
+
+
+<script>
+
+/* TEDDY RAIN */
+
+const rain=document.getElementById("rain");
+const emojis=["🧸","💗","✨","🌸"];
+
+for(let i=0;i<25;i++){
+
+let e=document.createElement("span");
+e.className="drop";
+e.innerHTML=emojis[Math.floor(Math.random()*4)];
+e.style.left=Math.random()*100+"vw";
+e.style.animationDuration=(5+Math.random()*5)+"s";
+
+rain.appendChild(e);
+
+}
+
+
+/* NAME CHECK */
+
+function checkName(){
+
+const name=prompt("Name sollu 🙂");
+
+if(!name) return;
+
+if(name.toLowerCase()=="sasmidha"){
+
+showPopup("😘 Sasmidhaaa...<br><br>Nalaiku kiss kudu 😌💋<br>Unakku biggest teddy naan tharen 🧸❤️");
+
+}else{
+
+showPopup("😤 Velila poda Theeyashakthi 🔥");
+
+}
+
+}
+
+function showPopup(msg){
+
+document.getElementById("popupMsg").innerHTML=msg;
+document.getElementById("popup").classList.add("show");
+
+setTimeout(()=>{
+document.getElementById("popup").classList.remove("show");
+},3000);
+
+}
+
+
+/* NEXT PAGE */
+
+function nextPage(){
+window.location.href="page6.html";
+}
+
+</script>
+
+</body>
+</html>
