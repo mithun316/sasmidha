@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chocolate Day 🍫💌</title>
+
+  <!-- ✅ DATE GATE: Only 09-02-2026 00:00 to 10-02-2026 00:00 (IST) -->
+  <script>
+    // IST window
+    const START_AT = new Date("2026-02-09T00:00:00+05:30").getTime();
+    const END_AT   = new Date("2026-02-10T00:00:00+05:30").getTime();
+
+    function enforceGate() {
+      const now = Date.now();
+
+      if (now < START_AT) {
+        // Before start -> back to index
+        window.location.replace("index.html");
+        return;
+      }
+
+      if (now >= END_AT) {
+        // After end -> go to page5
+        window.location.replace("page5.html");
+        return;
+      }
+    }
+
+    // Run immediately
+    enforceGate();
+
+    // Also keep checking while user stays on the page (midnight auto-redirect)
+    setInterval(enforceGate, 1000);
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Poppins",sans-serif;}
+    body{
+      min-height:100svh;
+      display:flex;align-items:center;justify-content:center;
+      background: radial-gradient(circle at top, #ffb3d9, #7b2cff);
+      overflow:hidden;color:#fff;padding:14px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* 🍫 Falling chocolates */
+    .chocoRain{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;}
+    .choco{
+      position:absolute; top:-12vh;
+      animation: fall linear infinite;
+      filter: drop-shadow(0 10px 12px rgba(0,0,0,.18));
+      transform: translateZ(0);
+    }
+    @keyframes fall{
+      0%{transform:translateY(-12vh) rotate(0deg);opacity:0;}
+      10%{opacity:.95;}
+      100%{transform:translateY(112vh) rotate(360deg);opacity:.92;}
+    }
+
+    .wrap{width:100%;max-width:980px;display:grid;gap:12px;place-items:center;position:relative;z-index:2;}
+
+    .title{text-align:center;line-height:1.25;padding:4px 6px;}
+    .chocoTitle{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:999px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(10px);
+      box-shadow:0 14px 45px rgba(0,0,0,.22);
+      font-weight:900;margin-bottom:8px;text-align:center;
+      max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .title h1{font-size:clamp(18px,5.2vw,34px);font-weight:1000;}
+    .title p{opacity:.9;margin-top:6px;font-size:clamp(12px,3.4vw,15px);}
+
+    /* 💌 Envelope */
+    .envelope-area{width:100%;max-width:760px;perspective:1200px;}
+    .envelope{
+      position:relative;width:100%;
+      height:min(520px,70svh);min-height:460px;
+      border-radius:22px;background: linear-gradient(145deg,#ff6fb7,#ff2e93);
+      border:2px solid rgba(255,255,255,0.22);
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+      overflow:hidden;cursor:pointer;touch-action: manipulation;
+    }
+    .envelope .hint{
+      position:absolute;top:12px;left:12px;right:12px;
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:12px;opacity:.95;z-index:6;pointer-events:none;
+      text-shadow:0 2px 10px rgba(0,0,0,.25);
+    }
+    .badge{
+      padding:7px 10px;border-radius:999px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.25);
+      font-size:12px;backdrop-filter: blur(6px);
+    }
+    .flap{
+      position:absolute;inset:0;transform-origin:top center;transform:rotateX(0deg);
+      transition:transform .9s cubic-bezier(.2,.8,.2,1);
+      background: linear-gradient(145deg,#ff8dc5,#ff4da6);
+      clip-path:polygon(0 0, 100% 0, 50% 55%);z-index:4;
+    }
+    .pocket{
+      position:absolute;inset:0;z-index:3;pointer-events:none;
+      background: linear-gradient(180deg, rgba(255,255,255,0.0) 55%, rgba(0,0,0,0.12) 100%);
+      clip-path:polygon(0 55%, 50% 80%, 100% 55%, 100% 100%, 0 100%);
+    }
+    .paper{
+      position:absolute;left:12px;right:12px;bottom:12px;height:calc(100% - 86px);
+      border-radius:18px;background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(10px);
+      transform:translateY(92px);
+      transition:transform .9s cubic-bezier(.2,.8,.2,1);
+      padding:12px;overflow:auto;z-index:2;-webkit-overflow-scrolling: touch;
+    }
+    .envelope.open .flap{transform:rotateX(-160deg);}
+    .envelope.open .paper{transform:translateY(0px);}
+    .paper h2{font-size:15px;margin-bottom:10px;font-weight:1000;}
+
+    textarea{
+      width:100%;padding:12px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.25);
+      background:rgba(0,0,0,.15);
+      color:#fff;outline:none;font-size:14px;
+      min-height:220px;resize:none;line-height:1.6;
+    }
+    textarea::placeholder{color:rgba(255,255,255,.7);}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .btn{
+      border:none;padding:12px 14px;border-radius:14px;cursor:pointer;font-weight:1000;
+      flex:1;min-width:140px;touch-action: manipulation;
+    }
+    .btn.primary{background:rgba(255,255,255,.95);color:#4b007a;}
+    .btn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22);}
+
+    /* 🍫 Cadbury style note */
+    .cadCard{
+      width:100%;max-width:980px;border-radius:22px;padding:16px 18px 18px;
+      background: linear-gradient(180deg, rgba(112,78,130,.72), rgba(92,62,112,.72));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 22px 70px rgba(0,0,0,.26);
+      position: relative;overflow: hidden;
+    }
+    .cadCard::after{
+      content:"";position:absolute;right:-70px;top:-70px;width:220px;height:220px;
+      background: radial-gradient(circle, rgba(255,255,255,.18), rgba(255,255,255,0) 60%);
+      pointer-events:none;
+    }
+    .cadHead{font-weight:900;font-size:14px;opacity:.95;margin-bottom:10px;}
+    .cadText{font-size:12.8px;line-height:1.55;opacity:.95;}
+    .cadText div{margin:2px 0;}
+    .cadNum{margin-top:6px;font-weight:900;letter-spacing:.2px;}
+    .cadBtns{margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;}
+    .cadBtn{
+      flex:1;min-width:190px;height:44px;border-radius:999px;font-weight:900;cursor:pointer;
+      border:1px solid rgba(255,255,255,.18);
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+      touch-action:manipulation;user-select:none;
+    }
+    .cadBtnLight{background:rgba(255,255,255,.92);color:#2b1734;}
+    .cadBtnDark{background:rgba(255,255,255,.10);color:rgba(255,255,255,.92);border:1px solid rgba(255,255,255,.22);}
+    .cadIcon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;opacity:.95;}
+
+    /* NEXT */
+    .nextWrap{width:100%;max-width:980px;display:flex;justify-content:center;margin-top:2px;}
+    .nextPill{
+      width:min(680px,100%);height:46px;border:0;border-radius:999px;
+      background:rgba(255,255,255,.92);color:#4b007a;font-weight:1000;cursor:pointer;
+      box-shadow:0 18px 60px rgba(0,0,0,.18);
+    }
+
+    /* BIG POPUP */
+    .popOverlay{
+      position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.60);
+      backdrop-filter: blur(6px);z-index:2500;padding:16px;
+    }
+    .popOverlay.show{display:grid;}
+    .popCard{
+      width:min(760px,94vw);
+      border-radius:26px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:0 26px 90px rgba(0,0,0,.45);
+      padding:18px 16px;text-align:center;position:relative;overflow:hidden;
+    }
+    .popCard:before{
+      content:"";position:absolute;inset:-2px;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.22), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 80% 90%, rgba(255,255,255,.16), rgba(255,255,255,0) 60%);
+      pointer-events:none;
+    }
+    .popInner{position:relative;z-index:2;}
+    .popEmoji{font-size:54px;line-height:1;margin-top:6px;}
+    .popTitle{font-size:clamp(18px,5vw,28px);font-weight:1000;margin-top:10px;}
+    .popMsg{margin-top:10px;font-size:clamp(13px,3.4vw,16px);line-height:1.6;opacity:.96;}
+    .popHint{margin-top:10px;font-size:12px;opacity:.85;}
+    .popActions{margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .popBtn{border:0;cursor:pointer;padding:12px 16px;border-radius:999px;font-weight:1000;min-width:170px;}
+    .popBtn.primary{background:rgba(255,255,255,.92);color:#4b007a;}
+    .popBtn.ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22);}
+    .popCloseX{
+      position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(0,0,0,.18);
+      color:#fff;cursor:pointer;font-weight:1000;z-index:3;
+    }
+
+    @media (max-width: 420px){
+      body{padding:12px;}
+      .envelope{height:min(540px,72svh);min-height:480px;border-radius:20px;}
+      .paper{left:10px;right:10px;bottom:10px;height:calc(100% - 82px);padding:10px;}
+      .cadCard{padding:14px 14px 16px;}
+      .cadBtn{min-width:140px;height:42px;}
+      .nextPill{height:44px;}
+      .choco{font-size:22px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="chocoRain" id="chocoRain"></div>
+
+  <div class="wrap">
+    <div class="title">
+      <div class="chocoTitle">🍫 Happy Chocolate Day thangooo 😘</div>
+      <h1>❤️ Oru chinna letter…</h1>
+      <p>Envelope open pannunga, letter la type pannunga ✨</p>
+    </div>
+
+    <div class="envelope-area">
+      <div class="envelope" id="envelope">
+        <div class="hint">
+          <span class="badge">Tap to Open</span>
+          <span class="badge">💌</span>
+        </div>
+
+        <div class="flap"></div>
+        <div class="pocket"></div>
+
+        <div class="paper">
+          <h2>Letter 💖</h2>
+
+          <textarea id="message" placeholder="Inga un heart-la irukura ellam ezhuthu... 💕"></textarea>
+
+          <div class="actions">
+            <button class="btn primary" type="button" id="fakeSend">Send 💌</button>
+            <button class="btn ghost" type="button" id="closeBtn">Close Envelope</button>
+          </div>
+
+          <div style="margin-top:10px;font-size:12px;opacity:.88;">
+            *Send button demo. (EmailJS venumna later add pannalam.) ✅
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cadCard">
+      <div class="cadHead">🍫💖 Chocolate note for my thangoo 😘</div>
+
+      <div class="cadText">
+        <div>Innaiku Chocolate Day thangoo…</div>
+        <div>Ennala vangi thara mudiyala 😔</div>
+        <div>Indha num ku call pannu — chocolate ku amount anuppuren 💝</div>
+        <div class="cadNum">9677887047</div>
+      </div>
+
+      <div class="cadBtns">
+        <button class="cadBtn cadBtnLight" id="gpayBtn" type="button">
+          <span class="cadIcon">💠</span> Open GPay
+        </button>
+        <button class="cadBtn cadBtnDark" id="waBtn" type="button">
+          <span class="cadIcon">💬</span> WhatsApp
+        </button>
+      </div>
+    </div>
+
+    <div class="nextWrap">
+      <button class="nextPill" id="goNext">NEXT ➜ Page 4</button>
+    </div>
+  </div>
+
+  <!-- BIG POPUP -->
+  <div class="popOverlay" id="popOverlay" aria-hidden="true">
+    <div class="popCard" role="dialog" aria-modal="true">
+      <button class="popCloseX" id="popCloseX" type="button">✕</button>
+      <div class="popInner">
+        <div class="popEmoji" id="popEmoji">🍫</div>
+        <div class="popTitle" id="popTitle">Hey!</div>
+        <div class="popMsg" id="popMsg">Message</div>
+        <div class="popHint">*(GPay/WhatsApp open aagadhu — popup mattum)*</div>
+        <div class="popActions">
+          <button class="popBtn primary" id="popOk" type="button">Okay 😄</button>
+          <button class="popBtn ghost" id="popLater" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* 🍫 Falling chocolates */
+    const rain = document.getElementById("chocoRain");
+    const EMOJIS = ["🍫","🍬","🍪","🍩","🍡","🧁"];
+    for(let i=0;i<26;i++){
+      const s=document.createElement("span");
+      s.className="choco";
+      s.textContent=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+      s.style.left=(Math.random()*100)+"vw";
+      s.style.animationDuration=(6+Math.random()*8)+"s";
+      s.style.animationDelay=(Math.random()*6)+"s";
+      s.style.fontSize=(18+Math.random()*18)+"px";
+      s.style.opacity=(0.55+Math.random()*0.45).toFixed(2);
+      rain.appendChild(s);
+    }
+
+    /* Envelope open/close */
+    const envelope=document.getElementById("envelope");
+    const closeBtn=document.getElementById("closeBtn");
+    envelope.addEventListener("click",(e)=>{ if(e.target.closest("textarea") || e.target.closest("button")) return; envelope.classList.toggle("open"); });
+    closeBtn.addEventListener("click",()=>envelope.classList.remove("open"));
+    setTimeout(()=>envelope.classList.add("open"),450);
+
+    document.getElementById("fakeSend").addEventListener("click",()=>{
+      const msg = document.getElementById("message").value.trim();
+      alert(msg ? "Sent 💌 (demo)" : "Letter empty-aa iruku 😅");
+    });
+
+    /* Next -> page4 */
+    document.getElementById("goNext").addEventListener("click",()=>{
+      window.location.href="page4.html";
+    });
+
+    /* Popup */
+    const popOverlay=document.getElementById("popOverlay");
+    const popCloseX=document.getElementById("popCloseX");
+    const popOk=document.getElementById("popOk");
+    const popLater=document.getElementById("popLater");
+    const popEmoji=document.getElementById("popEmoji");
+    const popTitle=document.getElementById("popTitle");
+    const popMsg=document.getElementById("popMsg");
+
+    function openPopup(){ popOverlay.classList.add("show"); }
+    function closePopup(){ popOverlay.classList.remove("show"); }
+
+    function askNameAndShowPopup(){
+      const name=(prompt("Name sollu 🙂")||"").trim();
+      const low=name.toLowerCase();
+
+      if(!name){
+        popEmoji.textContent="🍫😄";
+        popTitle.textContent="Name sollu da!";
+        popMsg.innerHTML="Name illama button click pannadha 😅";
+        openPopup(); return;
+      }
+
+      if(low==="sasmidha"){
+        popEmoji.textContent="😘🍫";
+        popTitle.textContent="Sasmidha 💜";
+        popMsg.innerHTML="Nalaiku <b>kiss kudu</b>…<br>unakku <b>chocolate</b> naan tharen 😌🍫✨";
+        openPopup();
+      }else{
+        popEmoji.textContent="😤🔥";
+        popTitle.textContent="Wrong name!";
+        popMsg.innerHTML="<b>Velila poda Theeyashakthi!</b> 😤🔥";
+        openPopup();
+      }
+    }
+
+    document.getElementById("gpayBtn").addEventListener("click",(e)=>{e.preventDefault();askNameAndShowPopup();});
+    document.getElementById("waBtn").addEventListener("click",(e)=>{e.preventDefault();askNameAndShowPopup();});
+
+    popCloseX.addEventListener("click",closePopup);
+    popOk.addEventListener("click",closePopup);
+    popLater.addEventListener("click",closePopup);
+    popOverlay.addEventListener("click",(e)=>{ if(e.target===popOverlay) closePopup(); });
+    window.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closePopup(); });
+  </script>
+</body>
+</html>
